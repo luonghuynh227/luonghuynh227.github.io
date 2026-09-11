@@ -151,6 +151,12 @@ const createCamelTargetModule = () => {
     if (!detail) return
     targetRoot.visible = true
 
+    // Dừng video GOSU nếu đang chạy khi quét trúng Lạc Đà
+    const arVideo = document.getElementById('ar-video')
+    if (arVideo && !arVideo.paused) {
+      arVideo.pause()
+    }
+
     if (detail.position) targetRoot.position.copy(detail.position)
     if (detail.rotation) targetRoot.quaternion.copy(detail.rotation)
     if (detail.scale) {

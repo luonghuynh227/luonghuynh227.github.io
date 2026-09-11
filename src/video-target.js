@@ -99,8 +99,17 @@ const createVideoTargetModule = () => {
 
   const hideVideo = () => {
     if (!targetRoot) return
-    console.log('[VideoModule] Target lost')
+    console.log('[VideoModule] Target lost -> Tạm dừng video và ẩn giao diện')
     targetRoot.visible = false
+
+    // 1. DỪNG PHÁT VIDEO & TẮT ÂM THANH NGAY KHI RỜI CAMERA KHỎI ẢNH GOSU
+    if (video && !video.paused) {
+      video.pause()
+    }
+
+    // 2. Ẩn nút âm thanh trên thanh công cụ HUD
+    const soundBtn = document.getElementById('sound-btn')
+    if (soundBtn) soundBtn.style.display = 'none'
 
     const hudDot = document.getElementById('hud-dot')
     const hudTitle = document.getElementById('hud-status')
@@ -163,6 +172,15 @@ const createVideoTargetModule = () => {
         process: ({ detail }) => {
           if (detail.name === 'gosu' || detail.name === 'target') {
             showVideo(detail)
+          } else {
+            // Khi camera chuyển sang quét trúng ảnh khác (Lạc Đà SROM, Cờ Vua Chess...)
+            // Lập tức tạm dừng video GOSU và ẩn khung video
+            if (video && !video.paused) {
+              video.pause()
+            }
+            if (targetRoot) targetRoot.visible = false
+            const soundBtn = document.getElementById('sound-btn')
+            if (soundBtn) soundBtn.style.display = 'none'
           }
         },
       },

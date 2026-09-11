@@ -80,6 +80,9 @@ if (previewTargetBtn && targetModal) {
   previewTargetBtn.addEventListener('click', (e) => {
     e.stopPropagation()
     targetModal.style.display = 'flex'
+    if (video && !video.paused) {
+      video.pause()
+    }
   })
 }
 if (closeModalBtn && targetModal) {

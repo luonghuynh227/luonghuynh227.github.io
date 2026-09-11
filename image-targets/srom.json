@@ -1,0 +1,23 @@
+{
+  "imagePath": "image-targets/srom_luminance.jpg",
+  "metadata": null,
+  "name": "srom",
+  "type": "PLANAR",
+  "properties": {
+    "left": 0,
+    "top": 180,
+    "width": 630,
+    "height": 840,
+    "isRotated": true,
+    "originalWidth": 630,
+    "originalHeight": 1200
+  },
+  "resources": {
+    "originalImage": "srom_original.jpg",
+    "croppedImage": "srom_cropped.jpg",
+    "thumbnailImage": "srom_thumbnail.jpg",
+    "luminanceImage": "srom_luminance.jpg"
+  },
+  "created": 1789034858682,
+  "updated": 1789034858682
+}

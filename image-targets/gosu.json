@@ -1,0 +1,23 @@
+{
+  "imagePath": "image-targets/gosu_luminance.jpg",
+  "metadata": null,
+  "name": "gosu",
+  "type": "PLANAR",
+  "properties": {
+    "left": 0,
+    "top": 281,
+    "width": 848,
+    "height": 1131,
+    "isRotated": true,
+    "originalWidth": 848,
+    "originalHeight": 1692
+  },
+  "resources": {
+    "originalImage": "gosu_original.jpg",
+    "croppedImage": "gosu_cropped.jpg",
+    "thumbnailImage": "gosu_thumbnail.jpg",
+    "luminanceImage": "gosu_luminance.jpg"
+  },
+  "created": 1789033326479,
+  "updated": 1789033326479
+}

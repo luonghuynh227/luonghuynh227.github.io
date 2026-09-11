@@ -1,0 +1,23 @@
+{
+  "imagePath": "image-targets/chess_luminance.jpg",
+  "metadata": null,
+  "name": "chess",
+  "type": "PLANAR",
+  "properties": {
+    "left": 0,
+    "top": 182,
+    "width": 808,
+    "height": 1077,
+    "isRotated": true,
+    "originalWidth": 808,
+    "originalHeight": 1440
+  },
+  "resources": {
+    "originalImage": "chess_original.jpg",
+    "croppedImage": "chess_cropped.jpg",
+    "thumbnailImage": "chess_thumbnail.jpg",
+    "luminanceImage": "chess_luminance.jpg"
+  },
+  "created": 1789095547776,
+  "updated": 1789095547776
+}

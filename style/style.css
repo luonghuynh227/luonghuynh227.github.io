@@ -1,0 +1,324 @@
+﻿* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  user-select: none;
+}
+
+/* Canvas AR phủ toàn màn hình */
+#camerafeed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  display: block;
+}
+
+/* Ẩn watermark powered by 8thwall trên toàn trang */
+.poweredby-img, [class*="poweredby"], [id*="powered-by"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Giao diện HUD hướng dẫn */
+#ar-hud {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  padding: 0 16px;
+}
+
+.hud-box {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(15, 20, 35, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(0, 240, 255, 0.4);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.15);
+  pointer-events: auto;
+  transition: all 0.3s ease;
+}
+
+.hud-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffb703;
+  box-shadow: 0 0 12px #ffb703;
+  flex-shrink: 0;
+  animation: pulse-dot 1.5s infinite ease-in-out;
+  transition: all 0.3s ease;
+}
+
+.hud-indicator.found {
+  background: #00f0ff;
+  box-shadow: 0 0 14px #00f0ff, 0 0 25px #00f0ff;
+}
+
+.hud-indicator.lost {
+  background: #fb8500;
+  box-shadow: 0 0 12px #fb8500;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
+
+.hud-info {
+  flex: 1;
+}
+
+.hud-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hud-desc {
+  font-size: 12px;
+  color: #d0e0ff;
+  margin-top: 3px;
+  opacity: 0.9;
+  line-height: 1.3;
+}
+
+/* Các nút bấm thao tác */
+.hud-actions {
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.hud-btn {
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.hud-btn:active {
+  transform: scale(0.95);
+}
+
+.glow-btn {
+  background: linear-gradient(135deg, #00f0ff, #7000ff);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+}
+
+.glass-btn {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Modal xem ảnh mẫu */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #111728;
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 380px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+}
+
+.modal-header {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  color: #00f0ff;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 18px;
+  text-align: center;
+}
+
+.modal-body p {
+  font-size: 13px;
+  color: #d0e0ff;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.modal-img {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  background: #000;
+}
+
+.camel-btn {
+  background: linear-gradient(135deg, #ff9900, #ff5500);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255, 153, 0, 0.4);
+}
+.camel-btn.walking {
+  background: linear-gradient(135deg, #ff3366, #cc0033);
+  box-shadow: 0 4px 15px rgba(255, 51, 102, 0.5);
+}
+
+
+/* Video ngầm gắn vào viewport để đảm bảo Mobile Safari và Chrome cho phép autoplay */
+#ar-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 240px;
+  opacity: 1;
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+/* Giao diện thanh công cụ Cờ vua AR */
+#chess-hud {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 440px;
+  background: rgba(13, 21, 37, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(0, 240, 255, 0.5);
+  border-radius: 18px;
+  padding: 10px 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.2);
+  pointer-events: auto; /* Cực kỳ quan trọng: Cho phép click/touch toàn bộ thanh cờ vua */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.chess-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.chess-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #00f0ff;
+  letter-spacing: 0.5px;
+}
+
+.diff-selector {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3px;
+  border-radius: 20px;
+}
+
+.diff-btn {
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+  transition: all 0.2s ease;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.diff-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.diff-btn:active {
+  transform: scale(0.93);
+}
+
+.diff-btn.active {
+  background: linear-gradient(135deg, #00f0ff, #0077ff);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 240, 255, 0.4);
+}
+
+.chess-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AR Multi-Target - Three.js</title>
+  
+  <link rel="stylesheet" href="./style/style.css?v=26">
+
+  <!-- 1. Thu vi?n Three.js CDN (r128) & B? d?c 3D GLTFLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+
+  <!-- 2. Engine 8th Wall CDN (ch? d? SLAM & Image Targets) -->
+  <script async src="https://cdn.jsdelivr.net/npm/@8thwall/engine-binary@1/dist/xr.js" data-preload-chunks="slam"></script>
+
+  <!-- 3. Thu vi?n ti?n �ch XRExtras CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@1/dist/xrextras.js"></script>
+</head>
+<body>
+  <!-- Canvas d? Three.js v? n?i dung AR d� l�n Camera -->
+  <canvas id="camerafeed"></canvas>
+
+  <!-- Video ng?m d�ng l�m Texture 3D cho ?nh GOSU -->
+  <!-- Video Texture 3D (Lazy Load on-demand: Chi nap khi camera quet trung anh) -->
+  <video id="ar-video" muted loop playsinline webkit-playsinline preload="none"></video>
+
+  <!-- Giao di?n HUD di?u khi?n & hu?ng d?n ngu?i d�ng -->
+  <div id="ar-hud">
+    <div class="hud-box">
+      <div class="hud-indicator" id="hud-dot"></div>
+      <div class="hud-info">
+        <div id="hud-status" class="hud-title">?? H�Y HU?NG CAMERA V�O T?M ?NH</div>
+        <div id="hud-detail" class="hud-desc">Qu�t ?nh GOSU d? xem Video ho?c ?nh SROM d? xem L?c �� 3D</div>
+      </div>
+    </div>
+
+    <!-- Thanh n�t tuong t�c nhanh -->
+        <!-- Thanh điều khiển Cờ vua AR (Chọn độ khó Dễ - Vừa - Khó & Ván mới) -->
+    <div id="chess-hud" style="display: none;">
+      <div class="chess-header">
+        <span class="chess-title">⚔️ CỜ VUA AR</span>
+        <div class="diff-selector">
+          <button class="diff-btn" data-diff="easy">Dễ</button>
+          <button class="diff-btn active" data-diff="medium">Vừa</button>
+          <button class="diff-btn" data-diff="hard">Khó</button>
+        </div>
+      </div>
+      <div class="chess-actions">
+        <button id="chess-restart-btn" class="hud-btn glass-btn" style="padding: 6px 14px; font-size: 12px;">
+          🔄 Ván Mới
+        </button>
+        <button id="chess-undo-btn" class="hud-btn glass-btn" style="padding: 6px 14px; font-size: 12px;">
+          ↩️ Đi Lại
+        </button>
+      </div>
+    </div>
+
+    <div class="hud-actions">
+      <button id="sound-btn" class="hud-btn glow-btn">
+        <span id="sound-icon">??</span> <span id="sound-text">B?t �m Thanh</span>
+      </button>
+      <button id="camel-walk-btn" class="hud-btn camel-btn" style="display: none;">
+        <span id="camel-walk-icon">??</span> <span id="camel-walk-text">Cho L?c �� �i D?o</span>
+      </button>
+      <button id="preview-target-btn" class="hud-btn glass-btn">
+        ??? Xem ?nh M?u
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup hi?n th? ?nh m?u d? qu�t th? ti?n l?i -->
+  <div id="target-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Ch?n ?nh M?u C?n Qu�t</h3>
+        <button id="close-modal-btn" class="modal-close">?</button>
+      </div>
+      <div class="modal-tabs" style="display: flex; gap: 6px; margin-bottom: 12px;">
+        <button id="tab-gosu" class="hud-btn active" style="flex: 1; padding: 8px 4px; font-size: 12px;">🎬 1. GOSU</button>
+        <button id="tab-srom" class="hud-btn" style="flex: 1; padding: 8px 4px; font-size: 12px;">🐫 2. SROM</button>
+        <button id="tab-chess" class="hud-btn" style="flex: 1; padding: 8px 4px; font-size: 12px;">♟️ 3. CHESS</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: #aaa; margin-bottom: 8px;">M? t?m ?nh n�y tr�n m?t m�n h�nh kh�c r?i dua camera v�o:</p>
+        <img id="modal-img" src="./assets/gosu.jpg" alt="Target Image" class="modal-img" style="max-height: 260px; object-fit: contain; width: 100%; border-radius: 8px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- N?p c�c module AR d?c l?p t�ch r?i -->
+  <script src="./src/video-target.js?v=20"></script>
+  <script src="./src/camel-target.js?v=20"></script>
+  <script src="./src/chess-target.js?v=26"></script>
+  <script src="./src/main.js?v=26"></script>
+</body>
+</html>

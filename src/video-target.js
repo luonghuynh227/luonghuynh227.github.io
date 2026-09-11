@@ -8,7 +8,7 @@ const createVideoTargetModule = () => {
   if (video) {
     video.muted = true
     video.defaultMuted = true
-    video.volume = 0
+    video.volume = 1.0 // Giữ volume 1.0 (Android cần volume > 0 để phát được âm thanh khi unmute)
     video.playsInline = true
     video.crossOrigin = 'anonymous'
   }
@@ -58,9 +58,15 @@ const createVideoTargetModule = () => {
     videoMesh.scale.set(width, height, 1)
     borderLines.scale.set(width * 1.02, height * 1.02, 1)
 
-    // 3. Tự động phát video
-    video.muted = (typeof window.isMuted !== 'undefined') ? window.isMuted : true
-    if (video.muted) video.volume = 0
+    // 3. Tự động phát video (Hỗ trợ chuẩn cả Android và iOS)
+    const isMutedState = (typeof window.isMuted !== 'undefined') ? window.isMuted : true
+    video.muted = isMutedState
+    if (isMutedState) {
+      video.setAttribute('muted', '')
+    } else {
+      video.removeAttribute('muted')
+      video.volume = 1.0
+    }
 
     if (video.paused) {
       const p = video.play()
